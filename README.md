@@ -11,6 +11,18 @@
 ### 6.界面专业设计，界面美观。
 ### 7.支持设备不可用block回调。
 ### 8.整个使用过程你不再需要设置代理，全部使用block回调。
+### 9.您如果需要不同的选取功能，直接在初始化的时候指定type即可
+
+    CorePhotoPickerTypeCamera=0,                                                            //用户拍照
+    
+    CorePhotoPickerTypeSinglePhoto,                                                         //单张照片选取
+    
+    CorePhotoPickerTypeMultiPhoto,                                                          //多张照片选取
+    
+    CorePhotoPickerTypeVideo,                                                               //视频选取（暂不考虑，本框架仍可以完美支持）
+    
+    
+#使用示例
 
     CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager pickerVCWithPikerType:CorePhotoPickerTypeMultiPhoto];
     

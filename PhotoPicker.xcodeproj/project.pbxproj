@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		EE597F721A9042E70037CF67 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F6F1A9042E70037CF67 /* 1.png */; };
-		EE597F731A9042E70037CF67 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F701A9042E70037CF67 /* 2.png */; };
 		EE597F741A9042E70037CF67 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F711A9042E70037CF67 /* 3.png */; };
 		EE597F8C1A90431C0037CF67 /* CorePhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = EE597F771A90431C0037CF67 /* CorePhoto.m */; };
 		EE597F8D1A90431C0037CF67 /* CorePhotoPickerVCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE597F791A90431C0037CF67 /* CorePhotoPickerVCManager.m */; };
@@ -42,7 +41,6 @@
 
 /* Begin PBXFileReference section */
 		EE597F6F1A9042E70037CF67 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
-		EE597F701A9042E70037CF67 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		EE597F711A9042E70037CF67 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
 		EE597F761A90431C0037CF67 /* CorePhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CorePhoto.h; sourceTree = "<group>"; };
 		EE597F771A90431C0037CF67 /* CorePhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CorePhoto.m; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				EE597F6F1A9042E70037CF67 /* 1.png */,
-				EE597F701A9042E70037CF67 /* 2.png */,
 				EE597F711A9042E70037CF67 /* 3.png */,
 			);
 			path = img;
@@ -287,7 +284,6 @@
 			files = (
 				EEC511A61A8D96A40082C50E /* Main.storyboard in Resources */,
 				EEC511AB1A8D96A40082C50E /* LaunchScreen.xib in Resources */,
-				EE597F731A9042E70037CF67 /* 2.png in Resources */,
 				EE597F741A9042E70037CF67 /* 3.png in Resources */,
 				EE597F721A9042E70037CF67 /* 1.png in Resources */,
 				EEC511A81A8D96A40082C50E /* Images.xcassets in Resources */,

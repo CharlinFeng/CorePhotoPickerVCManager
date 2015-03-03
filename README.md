@@ -2,6 +2,7 @@
 #CorePhotoPickerVCManager
 ####大统一的多功能照片选取器，集成拍摄，单选，多选。
 
+    Charlin出框架的目标：简单、易用、高度封装、绝对解耦！
 
 
 ##框架特性：<br />

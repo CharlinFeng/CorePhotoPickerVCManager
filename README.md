@@ -27,10 +27,10 @@ typedef enum{
     //视频选取（暂不考虑，本框架仍可以完美支持）
     CorePhotoPickerVCMangerTypeVideo,
     
-}CorePhotoPickerVCMangerType;
+    }CorePhotoPickerVCMangerType;
 
 
-typedef enum{
+    typedef enum{
     
     //无错误,可用
     CorePhotoPickerUnavailableTypeNone,

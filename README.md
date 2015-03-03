@@ -13,13 +13,35 @@
 ### 8.整个使用过程你不再需要设置代理，全部使用block回调。
 ### 9.您如果需要不同的选取功能，直接在初始化的时候指定type即可
 
-    CorePhotoPickerTypeCamera=0,                                                            //用户拍照
+typedef enum{
     
-    CorePhotoPickerTypeSinglePhoto,                                                         //单张照片选取
+    //用户拍照
+    CorePhotoPickerVCMangerTypeCamera=0,
     
-    CorePhotoPickerTypeMultiPhoto,                                                          //多张照片选取
+    //单张照片选取
+    CorePhotoPickerVCMangerTypeSinglePhoto,
     
-    CorePhotoPickerTypeVideo,                                                               //视频选取（暂不考虑，本框架仍可以完美支持）
+    //多张照片选取
+    CorePhotoPickerVCMangerTypeMultiPhoto,
+    
+    //视频选取（暂不考虑，本框架仍可以完美支持）
+    CorePhotoPickerVCMangerTypeVideo,
+    
+}CorePhotoPickerVCMangerType;
+
+
+typedef enum{
+    
+    //无错误,可用
+    CorePhotoPickerUnavailableTypeNone,
+    
+    //相机不可用
+    CorePhotoPickerUnavailableTypeCamera,
+    
+    //相册不可用
+    CorePhotoPickerUnavailableTypePhoto,
+    
+}CorePhotoPickerUnavailableType;
     
     
 #使用示例

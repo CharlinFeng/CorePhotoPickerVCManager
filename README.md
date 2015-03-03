@@ -84,14 +84,15 @@
 <br /><br /><br /><br />
 
 -----
-    CorePhotoPickerVCManager 大统一的多功能照片选取器。
+    CorePhotoPickerVCManager 大统一的多功能照片选取器，集成拍摄，单选，多选。
 -----
 
 <br /><br />
 
 #### 版权说明 RIGHTS <br />
 作品说明：本框架由iOS开发攻城狮Charlin制作。<br />
-作品时间： 2015.03.02 23:50<br /><br />
+作品时间： 2015.01.02 23:50<br /><br />
+更新时间：2.15.03.03 15:14<br /><br />
 
 #### 关于Chariln INTRODUCE <br />
 作者简介：Charlin-四川成都华西都市报旗下华西都市网络有限公司技术部iOS工程师！<br /><br />

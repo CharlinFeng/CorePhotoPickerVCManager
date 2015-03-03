@@ -40,6 +40,7 @@
             
             //相册不可用
             CorePhotoPickerUnavailableTypePhoto,
+            
     }CorePhotoPickerUnavailableType;
     
     

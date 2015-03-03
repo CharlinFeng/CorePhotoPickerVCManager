@@ -24,12 +24,13 @@
     
 #使用示例
 
-    CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager pickerVCWithPikerType:CorePhotoPickerTypeMultiPhoto];
+    CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager sharedCorePhotoPickerVCManager];
     
-    _manager=manager;
+    //设置类型
+    manager.pickerVCManagerType=type;
     
     //最多可选3张
-    manager.maxSelectedPhotoNumber=4;
+    manager.maxSelectedPhotoNumber=3;
     
     //错误处理
     if(manager.unavailableType!=CorePhotoPickerUnavailableTypeNone){
@@ -37,7 +38,7 @@
         return;
     }
     
-    UIViewController *pickerVC=manager.pickerVC;
+    UIViewController *pickerVC=manager.imagePickerController;
     
     //选取结束
     manager.finishPickingMedia=^(NSArray *medias){
@@ -46,9 +47,7 @@
             NSLog(@"%@",photo.editedImage);
         }];
     };
-
     
-
     [self presentViewController:pickerVC animated:YES completion:nil];
 
 

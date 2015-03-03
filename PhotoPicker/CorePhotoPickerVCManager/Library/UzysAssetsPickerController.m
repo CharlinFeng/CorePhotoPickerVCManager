@@ -308,8 +308,6 @@
     self.assetsGroup = self.groups[item];
     [self setupAssets:nil];
     [self.groupPicker.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:item inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    [self.groupPicker dismiss:YES];
-
 }
 - (void)changeAssetType:(BOOL)isPhoto endBlock:(voidBlock)endBlock
 {

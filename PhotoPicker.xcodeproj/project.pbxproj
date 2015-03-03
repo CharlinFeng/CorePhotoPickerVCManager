@@ -41,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EE40B3D01AA576E50079A920 /* HMSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSingleton.h; sourceTree = "<group>"; };
 		EE597F6F1A9042E70037CF67 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		EE597F711A9042E70037CF67 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
 		EE597F761A90431C0037CF67 /* CorePhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CorePhoto.h; sourceTree = "<group>"; };
@@ -111,6 +112,7 @@
 		EE597F751A90431C0037CF67 /* CorePhotoPickerVCManager */ = {
 			isa = PBXGroup;
 			children = (
+				EE40B3D01AA576E50079A920 /* HMSingleton.h */,
 				EE597F761A90431C0037CF67 /* CorePhoto.h */,
 				EE597F771A90431C0037CF67 /* CorePhoto.m */,
 				EE597F781A90431C0037CF67 /* CorePhotoPickerVCManager.h */,

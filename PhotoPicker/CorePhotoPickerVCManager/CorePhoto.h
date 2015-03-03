@@ -12,6 +12,7 @@
 
 @interface CorePhoto : NSObject
 
+
 @property (nonatomic,copy) NSString *referenceURL;                                      //相册的路径
 
 @property (nonatomic,strong) NSString *mediaType;                                       //媒体类型

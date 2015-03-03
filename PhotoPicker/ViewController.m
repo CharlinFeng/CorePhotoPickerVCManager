@@ -10,7 +10,7 @@
 #import "CorePhotoPickerVCManager.h"
 
 
-@interface ViewController ()
+@interface ViewController ()<UIActionSheetDelegate>
 
 @property (nonatomic,strong) CorePhotoPickerVCManager *manager;
 @property (strong, nonatomic) IBOutlet UIImageView *imageV;
@@ -27,13 +27,33 @@
 }
 
 - (IBAction)btnClick:(id)sender {
+   
+    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:@"请选取" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"拍摄" otherButtonTitles:@"照片库",@"照片多选", nil];
     
-    CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager pickerVCWithPikerType:CorePhotoPickerTypeMultiPhoto];
+    [sheet showInView:self.view];
     
-    _manager=manager;
+    
+}
+
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    CorePhotoPickerVCMangerType type=0;
+
+    
+    if(buttonIndex==0) type=CorePhotoPickerVCMangerTypeCamera;
+    
+    if(buttonIndex==1) type=CorePhotoPickerVCMangerTypeSinglePhoto;
+    
+    if(buttonIndex==2) type=CorePhotoPickerVCMangerTypeMultiPhoto;
+
+    CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager sharedCorePhotoPickerVCManager];
+    
+    //设置类型
+    manager.pickerVCManagerType=type;
     
     //最多可选3张
-    manager.maxSelectedPhotoNumber=4;
+    manager.maxSelectedPhotoNumber=3;
     
     //错误处理
     if(manager.unavailableType!=CorePhotoPickerUnavailableTypeNone){
@@ -41,7 +61,7 @@
         return;
     }
     
-    UIViewController *pickerVC=manager.pickerVC;
+    UIViewController *pickerVC=manager.imagePickerController;
     
     //选取结束
     manager.finishPickingMedia=^(NSArray *medias){
@@ -50,15 +70,11 @@
             NSLog(@"%@",photo.editedImage);
         }];
     };
-
     
-
     [self presentViewController:pickerVC animated:YES completion:nil];
+
     
 }
-
-
-
 
 
 

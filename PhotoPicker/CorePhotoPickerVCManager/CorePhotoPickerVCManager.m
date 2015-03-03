@@ -11,42 +11,94 @@
 
 @interface CorePhotoPickerVCManager ()<UINavigationControllerDelegate, UIImagePickerControllerDelegate,UzysAssetsPickerControllerDelegate>
 
-@property (nonatomic,strong) UzysAssetsPickerController *multiPickerVC;                                 //相册多选控制器
+//相册多选控制器
+@property (nonatomic,strong) UzysAssetsPickerController *multiImagePickerController;
 
 @end
 
 @implementation CorePhotoPickerVCManager
+HMSingletonM(CorePhotoPickerVCManager)
 
 
 /**
- *  根据type创建对应的照片选择器
+ *  选取器类型
  */
-+(instancetype)pickerVCWithPikerType:(CorePhotoPickerType)pikerType{
+-(void)setPickerVCManagerType:(CorePhotoPickerVCMangerType)pickerVCManagerType{
     
-    CorePhotoPickerVCManager *pickerTool=[[CorePhotoPickerVCManager alloc] init];
+    //记录
+    _pickerVCManagerType=pickerVCManagerType;
     
-    pickerTool.pikerType=pikerType;
-
-    return pickerTool;
+    //只有设置了值，才能确定照片选取器
+    //初始化照片选取器
+    [self pickerVCPrepareWithManagerType:pickerVCManagerType];
 }
 
--(UIViewController *)pickerVCWithType:(CorePhotoPickerType)pikerType{
+
+/**
+ *  初始化照片选取器
+ */
+-(void)pickerVCPrepareWithManagerType:(CorePhotoPickerVCMangerType)managerType{
     
-    UIViewController *pickerVC=nil;
+    //重置错误值
+    self.unavailableType=CorePhotoPickerUnavailableTypeNone;
     
-    switch (pikerType) {
-        case CorePhotoPickerTypeCamera://拍摄
-        case CorePhotoPickerTypeSinglePhoto:
-            pickerVC=[self systemPicker];
-            break;
-            
-        default:
-            pickerVC=self.multiPickerVC;
-            break;
+    if(CorePhotoPickerVCMangerTypeCamera==_pickerVCManagerType || CorePhotoPickerVCMangerTypeSinglePhoto==_pickerVCManagerType){
+        //这个是系统相册选取器
+        //sourceType
+        UIImagePickerControllerSourceType sourceType=[self tranformCorePhotoPickerVCMangerTypeForSourceType:managerType];
+        
+        UIImagePickerController *imagePickerController=[[UIImagePickerController alloc] init];
+        
+        //判断是否可用
+        BOOL isSourceTypeAvailable = [UIImagePickerController isSourceTypeAvailable:sourceType];
+        
+        if(!isSourceTypeAvailable){
+            //不可用，直接抛出错误
+            self.unavailableType=[self tranformCorePhotoPickerVCMangerTypeForUnavailableType:managerType];
+            NSLog(@"当前设备不可用:%@",@(managerType));
+            return;
+        }
+        
+        //错误处理完毕，配置照片选取控制器
+        //类型
+        imagePickerController.sourceType=sourceType;
+        
+        //允许编辑
+        imagePickerController.allowsEditing=YES;
+        
+        //代理
+        imagePickerController.delegate=self;
+        
+        //记录控制器
+        self.imagePickerController=imagePickerController;
+        
+    }else if (CorePhotoPickerVCMangerTypeMultiPhoto==_pickerVCManagerType){
+        //这个是第三方多张照片选取器
+        
+        UzysAssetsPickerController *multiImagePickerController=[[UzysAssetsPickerController alloc] init];
+        
+        //记录控制器
+        self.multiImagePickerController=multiImagePickerController;
+        
+        //暂不支持选视频
+        multiImagePickerController.maximumNumberOfSelectionVideo=0;
+        
+        //初始化最大允许选取的图片数量
+        multiImagePickerController.maximumNumberOfSelectionPhoto=MAXFLOAT;
+        
+        //设置代理
+        multiImagePickerController.delegate=self;
+        
+        //记录控制器
+        self.imagePickerController=multiImagePickerController;
+        
+    }else{
+        //视频选取器，暂不支持
     }
-    
-    return pickerVC;
 }
+
+
+
 
 
 
@@ -57,70 +109,11 @@
     //记录
     _maxSelectedPhotoNumber=maxSelectedPhotoNumber;
     
+    if(self.multiImagePickerController==nil) return;
+    
     //设置
-    self.multiPickerVC.maximumNumberOfSelectionPhoto=maxSelectedPhotoNumber;
+    self.multiImagePickerController.maximumNumberOfSelectionPhoto=maxSelectedPhotoNumber;
 }
-
-
-
-#pragma mark  使用框架选取多疑图片:懒加载
--(UIViewController *)multiPickerVC{
-    
-    if(!_multiPickerVC){
-        
-        _multiPickerVC=[[UzysAssetsPickerController alloc] init];
-        
-        //暂不支持选视频
-        _multiPickerVC.maximumNumberOfSelectionVideo=0;
-        //初始化最大允许选取的图片数量
-        _multiPickerVC.maximumNumberOfSelectionPhoto=MAXFLOAT;
-        //设置代理
-        _multiPickerVC.delegate=self;
-    }
-    
-    return _multiPickerVC;
-}
-
-
-
-#pragma mark  使用系统的方法选取单张图片
--(UIViewController *)systemPicker{
-    
-    UIImagePickerControllerSourceType sourceType =(CorePhotoPickerTypeCamera==self.pikerType)?UIImagePickerControllerSourceTypeCamera:UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    BOOL available = [UIImagePickerController isSourceTypeAvailable:sourceType];
-    
-    if(!available){
-        
-        self.unavailableType=(CorePhotoPickerTypeCamera==self.pikerType)?CorePhotoPickerUnavailableTypeCamera:CorePhotoPickerUnavailableTypePhoto;
-        
-        return nil;
-    }
-    
-    UIImagePickerController *pickerVC=[[UIImagePickerController alloc] init];
-    
-    //允许编辑
-    pickerVC.allowsEditing=YES;
-    
-    //设置模式
-    pickerVC.sourceType=sourceType;
-    
-    //设置代理
-    pickerVC.delegate=self;
-
-    return pickerVC;
-}
-
-
--(UIViewController *)pickerVC{
-    
-    return [self pickerVCWithType:self.pikerType];
-}
-
-
-
-
-
 
 
 
@@ -130,7 +123,7 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
     //关闭自己
-    [self.pickerVC dismissViewControllerAnimated:YES completion:^{
+    [picker dismissViewControllerAnimated:YES completion:^{
         
         CorePhoto *photo=[CorePhoto photoWithInfoDict:info];
         
@@ -142,7 +135,7 @@
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     
     //直接取消
-    [self.pickerVC dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -168,7 +161,28 @@
 
 
 
+/**
+ *  CorePhotoPickerVCMangerType 转 UIImagePickerControllerSourceType
+ */
+-(UIImagePickerControllerSourceType)tranformCorePhotoPickerVCMangerTypeForSourceType:(CorePhotoPickerVCMangerType)type{
+    
+    if(CorePhotoPickerVCMangerTypeCamera == type) return UIImagePickerControllerSourceTypeCamera;
+    
+    if(CorePhotoPickerVCMangerTypeSinglePhoto == type) return UIImagePickerControllerSourceTypePhotoLibrary;
+    
+    return 0;
+}
 
-
+/**
+ *  CorePhotoPickerVCMangerType 转 CorePhotoPickerUnavailableType
+ */
+-(CorePhotoPickerUnavailableType)tranformCorePhotoPickerVCMangerTypeForUnavailableType:(CorePhotoPickerVCMangerType)type{
+    
+    if(CorePhotoPickerVCMangerTypeCamera == type) return CorePhotoPickerUnavailableTypeCamera;
+    
+    if(CorePhotoPickerVCMangerTypeSinglePhoto == type) return CorePhotoPickerUnavailableTypePhoto;
+    
+    return 0;
+}
 
 @end

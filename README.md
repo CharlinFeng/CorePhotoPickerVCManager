@@ -46,7 +46,7 @@
     }CorePhotoPickerUnavailableType;
     
     
-#使用示例
+#使用示例：
 
     CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager sharedCorePhotoPickerVCManager];
     
@@ -75,7 +75,7 @@
     [self presentViewController:pickerVC animated:YES completion:nil];
 
 
-#看看效果图吧
+#看看效果图吧：
 ![image](./PhotoPicker/img/1.png)
 ![image](./PhotoPicker/img/2.png)
 ![image](./PhotoPicker/img/3.png)

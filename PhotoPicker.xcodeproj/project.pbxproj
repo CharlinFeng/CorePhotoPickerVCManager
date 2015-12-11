@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		89FBA9D71C1AE8C800E3EA09 /* UIImage+UzysExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9C71C1AE8C800E3EA09 /* UIImage+UzysExtension.m */; };
+		89FBA9D81C1AE8C800E3EA09 /* UzysAppearanceConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9C91C1AE8C800E3EA09 /* UzysAppearanceConfig.m */; };
+		89FBA9DA1C1AE8C800E3EA09 /* UzysAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9CC1C1AE8C800E3EA09 /* UzysAssetsPickerController.m */; };
+		89FBA9DB1C1AE8C800E3EA09 /* UzysAssetsPickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89FBA9CD1C1AE8C800E3EA09 /* UzysAssetsPickerController.xib */; };
+		89FBA9DC1C1AE8C800E3EA09 /* UzysAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9D01C1AE8C800E3EA09 /* UzysAssetsViewCell.m */; };
+		89FBA9DD1C1AE8C800E3EA09 /* UzysGroupPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9D21C1AE8C800E3EA09 /* UzysGroupPickerView.m */; };
+		89FBA9DE1C1AE8C800E3EA09 /* UzysGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9D41C1AE8C800E3EA09 /* UzysGroupViewCell.m */; };
+		89FBA9DF1C1AE8C800E3EA09 /* UzysWrapperPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FBA9D61C1AE8C800E3EA09 /* UzysWrapperPickerController.m */; };
+		89FBA9E11C1AE91A00E3EA09 /* UzysAssetPickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FBA9E01C1AE91A00E3EA09 /* UzysAssetPickerController.bundle */; };
 		EE597F721A9042E70037CF67 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F6F1A9042E70037CF67 /* 1.png */; };
 		EE597F741A9042E70037CF67 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F711A9042E70037CF67 /* 3.png */; };
 		EE597F981A90469A0037CF67 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = EE597F971A90469A0037CF67 /* 2.png */; };
 		EE8227751AC15D54004049D7 /* CorePhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = EE82275F1AC15D54004049D7 /* CorePhoto.m */; };
 		EE8227761AC15D54004049D7 /* CorePhotoPickerVCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227611AC15D54004049D7 /* CorePhotoPickerVCManager.m */; };
-		EE8227771AC15D54004049D7 /* UIImage+UzysExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227651AC15D54004049D7 /* UIImage+UzysExtension.m */; };
-		EE8227781AC15D54004049D7 /* UzysAppearanceConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227671AC15D54004049D7 /* UzysAppearanceConfig.m */; };
-		EE8227791AC15D54004049D7 /* UzysAssetPickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EE8227681AC15D54004049D7 /* UzysAssetPickerController.bundle */; };
-		EE82277A1AC15D54004049D7 /* UzysAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE82276A1AC15D54004049D7 /* UzysAssetsPickerController.m */; };
-		EE82277B1AC15D54004049D7 /* UzysAssetsPickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE82276B1AC15D54004049D7 /* UzysAssetsPickerController.xib */; };
-		EE82277C1AC15D54004049D7 /* UzysAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE82276E1AC15D54004049D7 /* UzysAssetsViewCell.m */; };
-		EE82277D1AC15D54004049D7 /* UzysGroupPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227701AC15D54004049D7 /* UzysGroupPickerView.m */; };
-		EE82277E1AC15D54004049D7 /* UzysGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227721AC15D54004049D7 /* UzysGroupViewCell.m */; };
-		EE82277F1AC15D54004049D7 /* UzysWrapperPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE8227741AC15D54004049D7 /* UzysWrapperPickerController.m */; };
 		EEC5119D1A8D96A40082C50E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC5119C1A8D96A40082C50E /* main.m */; };
 		EEC511A01A8D96A40082C50E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC5119F1A8D96A40082C50E /* AppDelegate.m */; };
 		EEC511A31A8D96A40082C50E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC511A21A8D96A40082C50E /* ViewController.m */; };
@@ -41,6 +41,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		89FBA9C61C1AE8C800E3EA09 /* UIImage+UzysExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UzysExtension.h"; sourceTree = "<group>"; };
+		89FBA9C71C1AE8C800E3EA09 /* UIImage+UzysExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UzysExtension.m"; sourceTree = "<group>"; };
+		89FBA9C81C1AE8C800E3EA09 /* UzysAppearanceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAppearanceConfig.h; sourceTree = "<group>"; };
+		89FBA9C91C1AE8C800E3EA09 /* UzysAppearanceConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAppearanceConfig.m; sourceTree = "<group>"; };
+		89FBA9CB1C1AE8C800E3EA09 /* UzysAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController.h; sourceTree = "<group>"; };
+		89FBA9CC1C1AE8C800E3EA09 /* UzysAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsPickerController.m; sourceTree = "<group>"; };
+		89FBA9CD1C1AE8C800E3EA09 /* UzysAssetsPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UzysAssetsPickerController.xib; sourceTree = "<group>"; };
+		89FBA9CE1C1AE8C800E3EA09 /* UzysAssetsPickerController_Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController_Configuration.h; sourceTree = "<group>"; };
+		89FBA9CF1C1AE8C800E3EA09 /* UzysAssetsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsViewCell.h; sourceTree = "<group>"; };
+		89FBA9D01C1AE8C800E3EA09 /* UzysAssetsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsViewCell.m; sourceTree = "<group>"; };
+		89FBA9D11C1AE8C800E3EA09 /* UzysGroupPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupPickerView.h; sourceTree = "<group>"; };
+		89FBA9D21C1AE8C800E3EA09 /* UzysGroupPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupPickerView.m; sourceTree = "<group>"; };
+		89FBA9D31C1AE8C800E3EA09 /* UzysGroupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupViewCell.h; sourceTree = "<group>"; };
+		89FBA9D41C1AE8C800E3EA09 /* UzysGroupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupViewCell.m; sourceTree = "<group>"; };
+		89FBA9D51C1AE8C800E3EA09 /* UzysWrapperPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysWrapperPickerController.h; sourceTree = "<group>"; };
+		89FBA9D61C1AE8C800E3EA09 /* UzysWrapperPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysWrapperPickerController.m; sourceTree = "<group>"; };
+		89FBA9E01C1AE91A00E3EA09 /* UzysAssetPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UzysAssetPickerController.bundle; sourceTree = "<group>"; };
 		EE597F6F1A9042E70037CF67 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		EE597F711A9042E70037CF67 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
 		EE597F971A90469A0037CF67 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
@@ -49,23 +66,6 @@
 		EE8227601AC15D54004049D7 /* CorePhotoPickerVCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CorePhotoPickerVCManager.h; sourceTree = "<group>"; };
 		EE8227611AC15D54004049D7 /* CorePhotoPickerVCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CorePhotoPickerVCManager.m; sourceTree = "<group>"; };
 		EE8227621AC15D54004049D7 /* HMSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSingleton.h; sourceTree = "<group>"; };
-		EE8227641AC15D54004049D7 /* UIImage+UzysExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UzysExtension.h"; sourceTree = "<group>"; };
-		EE8227651AC15D54004049D7 /* UIImage+UzysExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UzysExtension.m"; sourceTree = "<group>"; };
-		EE8227661AC15D54004049D7 /* UzysAppearanceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAppearanceConfig.h; sourceTree = "<group>"; };
-		EE8227671AC15D54004049D7 /* UzysAppearanceConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAppearanceConfig.m; sourceTree = "<group>"; };
-		EE8227681AC15D54004049D7 /* UzysAssetPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UzysAssetPickerController.bundle; sourceTree = "<group>"; };
-		EE8227691AC15D54004049D7 /* UzysAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController.h; sourceTree = "<group>"; };
-		EE82276A1AC15D54004049D7 /* UzysAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsPickerController.m; sourceTree = "<group>"; };
-		EE82276B1AC15D54004049D7 /* UzysAssetsPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UzysAssetsPickerController.xib; sourceTree = "<group>"; };
-		EE82276C1AC15D54004049D7 /* UzysAssetsPickerController_Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController_Configuration.h; sourceTree = "<group>"; };
-		EE82276D1AC15D54004049D7 /* UzysAssetsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsViewCell.h; sourceTree = "<group>"; };
-		EE82276E1AC15D54004049D7 /* UzysAssetsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsViewCell.m; sourceTree = "<group>"; };
-		EE82276F1AC15D54004049D7 /* UzysGroupPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupPickerView.h; sourceTree = "<group>"; };
-		EE8227701AC15D54004049D7 /* UzysGroupPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupPickerView.m; sourceTree = "<group>"; };
-		EE8227711AC15D54004049D7 /* UzysGroupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupViewCell.h; sourceTree = "<group>"; };
-		EE8227721AC15D54004049D7 /* UzysGroupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupViewCell.m; sourceTree = "<group>"; };
-		EE8227731AC15D54004049D7 /* UzysWrapperPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysWrapperPickerController.h; sourceTree = "<group>"; };
-		EE8227741AC15D54004049D7 /* UzysWrapperPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysWrapperPickerController.m; sourceTree = "<group>"; };
 		EEC511971A8D96A40082C50E /* PhotoPicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoPicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC5119B1A8D96A40082C50E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEC5119C1A8D96A40082C50E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -99,6 +99,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		89FBA9C51C1AE8C800E3EA09 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				89FBA9E01C1AE91A00E3EA09 /* UzysAssetPickerController.bundle */,
+				89FBA9C61C1AE8C800E3EA09 /* UIImage+UzysExtension.h */,
+				89FBA9C71C1AE8C800E3EA09 /* UIImage+UzysExtension.m */,
+				89FBA9C81C1AE8C800E3EA09 /* UzysAppearanceConfig.h */,
+				89FBA9C91C1AE8C800E3EA09 /* UzysAppearanceConfig.m */,
+				89FBA9CB1C1AE8C800E3EA09 /* UzysAssetsPickerController.h */,
+				89FBA9CC1C1AE8C800E3EA09 /* UzysAssetsPickerController.m */,
+				89FBA9CD1C1AE8C800E3EA09 /* UzysAssetsPickerController.xib */,
+				89FBA9CE1C1AE8C800E3EA09 /* UzysAssetsPickerController_Configuration.h */,
+				89FBA9CF1C1AE8C800E3EA09 /* UzysAssetsViewCell.h */,
+				89FBA9D01C1AE8C800E3EA09 /* UzysAssetsViewCell.m */,
+				89FBA9D11C1AE8C800E3EA09 /* UzysGroupPickerView.h */,
+				89FBA9D21C1AE8C800E3EA09 /* UzysGroupPickerView.m */,
+				89FBA9D31C1AE8C800E3EA09 /* UzysGroupViewCell.h */,
+				89FBA9D41C1AE8C800E3EA09 /* UzysGroupViewCell.m */,
+				89FBA9D51C1AE8C800E3EA09 /* UzysWrapperPickerController.h */,
+				89FBA9D61C1AE8C800E3EA09 /* UzysWrapperPickerController.m */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 		EE597F6E1A9042E70037CF67 /* img */ = {
 			isa = PBXGroup;
 			children = (
@@ -112,38 +136,14 @@
 		EE82275D1AC15D54004049D7 /* CorePhotoPickerVCManager */ = {
 			isa = PBXGroup;
 			children = (
+				89FBA9C51C1AE8C800E3EA09 /* Library */,
 				EE82275E1AC15D54004049D7 /* CorePhoto.h */,
 				EE82275F1AC15D54004049D7 /* CorePhoto.m */,
 				EE8227601AC15D54004049D7 /* CorePhotoPickerVCManager.h */,
 				EE8227611AC15D54004049D7 /* CorePhotoPickerVCManager.m */,
 				EE8227621AC15D54004049D7 /* HMSingleton.h */,
-				EE8227631AC15D54004049D7 /* Library */,
 			);
 			path = CorePhotoPickerVCManager;
-			sourceTree = "<group>";
-		};
-		EE8227631AC15D54004049D7 /* Library */ = {
-			isa = PBXGroup;
-			children = (
-				EE8227641AC15D54004049D7 /* UIImage+UzysExtension.h */,
-				EE8227651AC15D54004049D7 /* UIImage+UzysExtension.m */,
-				EE8227661AC15D54004049D7 /* UzysAppearanceConfig.h */,
-				EE8227671AC15D54004049D7 /* UzysAppearanceConfig.m */,
-				EE8227681AC15D54004049D7 /* UzysAssetPickerController.bundle */,
-				EE8227691AC15D54004049D7 /* UzysAssetsPickerController.h */,
-				EE82276A1AC15D54004049D7 /* UzysAssetsPickerController.m */,
-				EE82276B1AC15D54004049D7 /* UzysAssetsPickerController.xib */,
-				EE82276C1AC15D54004049D7 /* UzysAssetsPickerController_Configuration.h */,
-				EE82276D1AC15D54004049D7 /* UzysAssetsViewCell.h */,
-				EE82276E1AC15D54004049D7 /* UzysAssetsViewCell.m */,
-				EE82276F1AC15D54004049D7 /* UzysGroupPickerView.h */,
-				EE8227701AC15D54004049D7 /* UzysGroupPickerView.m */,
-				EE8227711AC15D54004049D7 /* UzysGroupViewCell.h */,
-				EE8227721AC15D54004049D7 /* UzysGroupViewCell.m */,
-				EE8227731AC15D54004049D7 /* UzysWrapperPickerController.h */,
-				EE8227741AC15D54004049D7 /* UzysWrapperPickerController.m */,
-			);
-			path = Library;
 			sourceTree = "<group>";
 		};
 		EEC5118E1A8D96A40082C50E = {
@@ -289,12 +289,12 @@
 			files = (
 				EEC511A61A8D96A40082C50E /* Main.storyboard in Resources */,
 				EEC511AB1A8D96A40082C50E /* LaunchScreen.xib in Resources */,
+				89FBA9E11C1AE91A00E3EA09 /* UzysAssetPickerController.bundle in Resources */,
 				EE597F981A90469A0037CF67 /* 2.png in Resources */,
 				EE597F741A9042E70037CF67 /* 3.png in Resources */,
 				EE597F721A9042E70037CF67 /* 1.png in Resources */,
 				EEC511A81A8D96A40082C50E /* Images.xcassets in Resources */,
-				EE8227791AC15D54004049D7 /* UzysAssetPickerController.bundle in Resources */,
-				EE82277B1AC15D54004049D7 /* UzysAssetsPickerController.xib in Resources */,
+				89FBA9DB1C1AE8C800E3EA09 /* UzysAssetsPickerController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,17 +313,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEC511A31A8D96A40082C50E /* ViewController.m in Sources */,
-				EE82277C1AC15D54004049D7 /* UzysAssetsViewCell.m in Sources */,
+				89FBA9DC1C1AE8C800E3EA09 /* UzysAssetsViewCell.m in Sources */,
 				EE8227751AC15D54004049D7 /* CorePhoto.m in Sources */,
 				EEC511A01A8D96A40082C50E /* AppDelegate.m in Sources */,
 				EE8227761AC15D54004049D7 /* CorePhotoPickerVCManager.m in Sources */,
-				EE8227771AC15D54004049D7 /* UIImage+UzysExtension.m in Sources */,
-				EE82277F1AC15D54004049D7 /* UzysWrapperPickerController.m in Sources */,
+				89FBA9D71C1AE8C800E3EA09 /* UIImage+UzysExtension.m in Sources */,
+				89FBA9DF1C1AE8C800E3EA09 /* UzysWrapperPickerController.m in Sources */,
 				EEC5119D1A8D96A40082C50E /* main.m in Sources */,
-				EE82277D1AC15D54004049D7 /* UzysGroupPickerView.m in Sources */,
-				EE8227781AC15D54004049D7 /* UzysAppearanceConfig.m in Sources */,
-				EE82277E1AC15D54004049D7 /* UzysGroupViewCell.m in Sources */,
-				EE82277A1AC15D54004049D7 /* UzysAssetsPickerController.m in Sources */,
+				89FBA9DD1C1AE8C800E3EA09 /* UzysGroupPickerView.m in Sources */,
+				89FBA9D81C1AE8C800E3EA09 /* UzysAppearanceConfig.m in Sources */,
+				89FBA9DE1C1AE8C800E3EA09 /* UzysGroupViewCell.m in Sources */,
+				89FBA9DA1C1AE8C800E3EA09 /* UzysAssetsPickerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

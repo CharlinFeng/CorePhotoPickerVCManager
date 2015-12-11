@@ -22,7 +22,6 @@
         self.accessoryView = [[UIImageView alloc] initWithImage:[UIImage Uzys_imageNamed:appearanceConfig.assetsGroupSelectedImageName]];
         self.selectedBackgroundView = nil;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.backgroundColor=[UIColor clearColor];
     }
     return self;
 }

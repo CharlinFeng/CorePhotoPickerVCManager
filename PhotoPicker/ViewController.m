@@ -53,7 +53,7 @@
     manager.pickerVCManagerType=type;
     
     //最多可选3张
-    manager.maxSelectedPhotoNumber=3;
+    manager.maxSelectedPhotoNumber=5;
     
     //错误处理
     if(manager.unavailableType!=CorePhotoPickerUnavailableTypeNone){

@@ -9,26 +9,19 @@
 #import "UzysAssetsViewCell.h"
 #import "UzysWrapperPickerController.h"
 #import "UzysGroupPickerView.h"
+#import <ImageIO/ImageIO.h>
 
 @interface UzysAssetsPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 //View
-
-@property (nonatomic,assign) BOOL showMsg;                                  //是否正在显示提示信息
-
-@property (weak, nonatomic) IBOutlet UIButton *switchBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *imageViewTitleArrow;
+@property (weak, nonatomic) IBOutlet UIButton *btnTitle;
 @property (weak, nonatomic) IBOutlet UIButton *btnDone;
 @property (weak, nonatomic) IBOutlet UIView *navigationTop;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *labelSelectedMedia;
-
-@property (strong, nonatomic) IBOutlet UILabel *noticeLabel;
-
 @property (weak, nonatomic) IBOutlet UIButton *btnCamera;
 @property (weak, nonatomic) IBOutlet UIButton *btnClose;
-
-@property (strong, nonatomic) IBOutlet UIButton *selectedCountBtn;
-
 
 @property (nonatomic, strong) UIView *noAssetView;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -46,12 +39,7 @@
 @property (nonatomic, assign) NSInteger maximumNumberOfSelection;
 @property (nonatomic, assign) NSInteger curAssetFilterType;
 
-
-@property (strong, nonatomic) IBOutlet UILabel *msgLabel;
-
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *c_msgLabelTopMargin;
-
-
+@property (nonatomic, strong) NSMutableArray *orderedSelectedItem;
 
 - (IBAction)btnAction:(id)sender;
 - (IBAction)indexDidChangeForSegmentedControl:(id)sender;
@@ -59,6 +47,8 @@
 @end
 
 @implementation UzysAssetsPickerController
+
+@synthesize location;
 
 #pragma mark - ALAssetsLibrary
 
@@ -76,7 +66,7 @@
 
 - (id)init
 {
-    self = [super initWithNibName:@"UzysAssetsPickerController" bundle:nil];
+    self = [super initWithNibName:@"UzysAssetsPickerController" bundle:[NSBundle bundleForClass:[UzysAssetsPickerController class]]];
     if(self)
     {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetsLibraryUpdated:) name:ALAssetsLibraryChangedNotification object:nil];
@@ -102,7 +92,7 @@
     [self initVariable];
     [self initImagePicker];
     [self setupOneMediaTypeSelection];
-
+    
     __weak typeof(self) weakSelf = self;
     [self setupGroup:^{
         [weakSelf.groupPicker.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -112,25 +102,22 @@
     [self setupGroupPickerview];
     [self initNoAssetView];
     
-    //计数按钮圆角化
-    self.selectedCountBtn.layer.cornerRadius=11.0f;
-    self.msgLabel.text=[NSString stringWithFormat:@"提示：您最多可选 %li 张照片！",self.maximumNumberOfSelectionPhoto];
-    
 }
 
 - (void)initVariable
 {
-//    self.assetsFilter = [ALAssetsFilter allPhotos];
+    //    self.assetsFilter = [ALAssetsFilter allPhotos];
     [self setAssetsFilter:[ALAssetsFilter allPhotos] type:1];
     self.maximumNumberOfSelection = self.maximumNumberOfSelectionPhoto;
     self.view.clipsToBounds = YES;
+    self.orderedSelectedItem = [[NSMutableArray alloc] init];
 }
 - (void)initImagePicker
 {
     UzysWrapperPickerController *picker = [[UzysWrapperPickerController alloc] init];
-//    picker.modalPresentationStyle = UIModalPresentationCurrentContext;
+    //    picker.modalPresentationStyle = UIModalPresentationCurrentContext;
     picker.delegate = self;
-    picker.allowsEditing = YES;
+    picker.allowsEditing = NO;
     picker.videoQuality = UIImagePickerControllerQualityTypeHigh;
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
     {
@@ -138,7 +125,7 @@
         [UIImagePickerController availableMediaTypesForSourceType:
          UIImagePickerControllerSourceTypeCamera];
         NSMutableArray *mediaTypes = [NSMutableArray arrayWithArray:availableMediaTypes];
-
+        
         if (_maximumNumberOfSelectionMedia == 0)
         {
             if (_maximumNumberOfSelectionPhoto == 0)
@@ -146,7 +133,7 @@
             else if (_maximumNumberOfSelectionVideo == 0)
                 [mediaTypes removeObject:@"public.movie"];
         }
-
+        
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.mediaTypes = mediaTypes;
     }
@@ -155,6 +142,11 @@
 - (void)setupLayout
 {
     UzysAppearanceConfig *appearanceConfig = [UzysAppearanceConfig sharedConfig];
+    [self.btnCamera setImage:[UIImage Uzys_imageNamed:appearanceConfig.cameraImageName] forState:UIControlStateNormal];
+    [self.btnClose setImage:[UIImage Uzys_imageNamed:appearanceConfig.closeImageName] forState:UIControlStateNormal];
+    self.btnDone.layer.cornerRadius = 15;
+    self.btnDone.clipsToBounds = YES;
+    [self.btnDone setBackgroundColor:appearanceConfig.finishSelectionButtonColor];
     
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
     lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.15f];
@@ -169,27 +161,15 @@
     };
     
     [self.view insertSubview:self.groupPicker aboveSubview:self.bottomView];
-    
     [self.view bringSubviewToFront:self.navigationTop];
+    [self menuArrowRotate];
     
-//    UzysGroupPickerView *groupPickerView=self.groupPicker;
-//    
-//    groupPickerView.translatesAutoresizingMaskIntoConstraints=NO;
-//    
-//    NSDictionary *views=NSDictionaryOfVariableBindings(groupPickerView);
-//    
-//    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[groupPickerView]-0-|" options:0 metrics:nil views:views]];
-//    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[groupPickerView]-0-|" options:0 metrics:nil views:views]];
-//    
-// 
-
-
 }
 - (void)setupOneMediaTypeSelection
 {
     if(_maximumNumberOfSelectionMedia > 0)
     {
-//        self.assetsFilter = [ALAssetsFilter allAssets];
+        //        self.assetsFilter = [ALAssetsFilter allAssets];
         [self setAssetsFilter:[ALAssetsFilter allAssets] type:0];
         self.maximumNumberOfSelection = self.maximumNumberOfSelectionMedia;
         self.segmentedControl.hidden = YES;
@@ -198,13 +178,13 @@
             self.labelSelectedMedia.text = NSLocalizedStringFromTable(@"Choose media", @"UzysAssetsPickerController", nil);
         else
             self.labelSelectedMedia.text = NSLocalizedStringFromTable(@"Choose a media", @"UzysAssetsPickerController", nil);
-
+        
     }
     else
     {
         if(_maximumNumberOfSelectionPhoto == 0)
         {
-//            self.assetsFilter = [ALAssetsFilter allVideos];
+            //            self.assetsFilter = [ALAssetsFilter allVideos];
             [self setAssetsFilter:[ALAssetsFilter allVideos] type:2];
             
             self.maximumNumberOfSelection = self.maximumNumberOfSelectionVideo;
@@ -217,7 +197,7 @@
         }
         else if(_maximumNumberOfSelectionVideo == 0)
         {
-//            self.assetsFilter = [ALAssetsFilter allPhotos];
+            //            self.assetsFilter = [ALAssetsFilter allPhotos];
             [self setAssetsFilter:[ALAssetsFilter allPhotos] type:1];
             
             self.segmentedControl.selectedSegmentIndex = 0;
@@ -225,7 +205,7 @@
             self.segmentedControl.hidden = YES;
             self.labelSelectedMedia.hidden = NO;
             if(_maximumNumberOfSelection >1)
-                self.noticeLabel.text = [NSString stringWithFormat:@"最多选%li张",self.maximumNumberOfSelectionPhoto];
+                self.labelSelectedMedia.text = NSLocalizedStringFromTable(@"Choose photos", @"UzysAssetsPickerController", nil);
             else
                 self.labelSelectedMedia.text = NSLocalizedStringFromTable(@"Choose a photo", @"UzysAssetsPickerController", nil);
         }
@@ -234,7 +214,7 @@
             self.segmentedControl.hidden = NO;
             self.labelSelectedMedia.hidden = YES;
         }
-
+        
     }
 }
 
@@ -243,27 +223,15 @@
     
     UICollectionViewFlowLayout *layout  = [[UICollectionViewFlowLayout alloc] init];
     
-    if(IS_IPHONE_6_IOS8)
-    {
-        layout.itemSize = kThumbnailSize_IPHONE6;
-    }
-    else if(IS_IPHONE_6P_IOS8)
-    {
-        layout.itemSize = kThumbnailSize_IPHONE6P;
-    }
-    else
-    {
-        layout.itemSize                     = kThumbnailSize;
-    }
+    UzysAppearanceConfig *appearanceConfig = [UzysAppearanceConfig sharedConfig];
+    
+    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - appearanceConfig.cellSpacing * ((CGFloat)appearanceConfig.assetsCountInALine - 1.0f)) / (CGFloat)appearanceConfig.assetsCountInALine;
+    layout.itemSize = CGSizeMake(itemWidth, itemWidth);
     layout.sectionInset                 = UIEdgeInsetsMake(1.0, 0, 0, 0);
     layout.minimumInteritemSpacing      = 1.0;
-    layout.minimumLineSpacing           = 1.0;
-
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    
-    collectionView.translatesAutoresizingMaskIntoConstraints=NO;
-    self.collectionView=collectionView;
-    
+    layout.minimumLineSpacing           = appearanceConfig.cellSpacing;
+  
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64 -48) collectionViewLayout:layout];
     self.collectionView.allowsMultipleSelection = YES;
     [self.collectionView registerClass:[UzysAssetsViewCell class]
             forCellWithReuseIdentifier:kAssetsViewCellIdentifier];
@@ -273,17 +241,9 @@
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.bounces = YES;
     self.collectionView.alwaysBounceVertical = YES;
+    self.collectionView.scrollsToTop = YES;
 
     [self.view insertSubview:self.collectionView atIndex:0];
-    
-    collectionView.contentInset=UIEdgeInsetsMake(64, 0, 49+2, 0);
-    collectionView.contentOffset=CGPointMake(0, -64-2);
-    
-    NSDictionary *views=NSDictionaryOfVariableBindings(collectionView);
-    
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[collectionView]-0-|" options:0 metrics:nil views:views]];
-    
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[collectionView]-0-|" options:0 metrics:nil views:views]];
 }
 #pragma mark - Property
 - (void)setAssetsFilter:(ALAssetsFilter *)assetsFilter type:(NSInteger)type
@@ -301,6 +261,8 @@
     appearanceConfig.finishSelectionButtonColor = config.finishSelectionButtonColor;
     appearanceConfig.assetsGroupSelectedImageName = config.assetsGroupSelectedImageName;
     appearanceConfig.closeImageName = config.closeImageName;
+    appearanceConfig.assetsCountInALine = config.assetsCountInALine;
+    appearanceConfig.cellSpacing = config.cellSpacing;
 }
 
 - (void)changeGroup:(NSInteger)item
@@ -308,13 +270,16 @@
     self.assetsGroup = self.groups[item];
     [self setupAssets:nil];
     [self.groupPicker.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:item inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.groupPicker dismiss:YES];
+    [self.orderedSelectedItem removeAllObjects];
+    [self menuArrowRotate];
 }
 - (void)changeAssetType:(BOOL)isPhoto endBlock:(voidBlock)endBlock
 {
     if(isPhoto)
     {
         self.maximumNumberOfSelection = self.maximumNumberOfSelectionPhoto;
-//        self.assetsFilter = [ALAssetsFilter allPhotos];
+        //        self.assetsFilter = [ALAssetsFilter allPhotos];
         [self setAssetsFilter:[ALAssetsFilter allPhotos] type:1];
         
         [self setupAssets:endBlock];
@@ -322,7 +287,7 @@
     else
     {
         self.maximumNumberOfSelection = self.maximumNumberOfSelectionVideo;
-//        self.assetsFilter = [ALAssetsFilter allVideos];
+        //        self.assetsFilter = [ALAssetsFilter allVideos];
         [self setAssetsFilter:[ALAssetsFilter allVideos] type:2];
         
         [self setupAssets:endBlock];
@@ -388,9 +353,10 @@
         [strongSelf showNotAllowed];
         strongSelf.segmentedControl.enabled = NO;
         strongSelf.btnDone.enabled = NO;
-
         strongSelf.btnCamera.enabled = NO;
         [strongSelf setTitle:NSLocalizedStringFromTable(@"Not Allowed", @"UzysAssetsPickerController",nil)];
+        //        [self.btnTitle setTitle:NSLocalizedStringFromTable(@"Not Allowed", @"UzysAssetsPickerController",nil) forState:UIControlStateNormal];
+        [strongSelf.btnTitle setImage:nil forState:UIControlStateNormal];
         
     };
     
@@ -401,9 +367,8 @@
 
 - (void)setupAssets:(voidBlock)successBlock
 {
-    NSString *name = [self.assetsGroup valueForProperty:ALAssetsGroupPropertyName];
+    self.title = [self.assetsGroup valueForProperty:ALAssetsGroupPropertyName];
     
-    self.labelSelectedMedia.text=name;
     if (!self.assets)
         self.assets = [[NSMutableArray alloc] init];
     else
@@ -415,7 +380,7 @@
     }
     [self.assetsGroup setAssetsFilter:self.assetsFilter];
     __weak typeof(self) weakSelf = self;
-
+    
     ALAssetsGroupEnumerationResultsBlock resultsBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (asset)
@@ -438,7 +403,7 @@
                     successBlock();
                 
             });
-
+            
         }
     };
     [self.assetsGroup enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:resultsBlock];
@@ -446,26 +411,13 @@
 - (void)reloadData
 {
     [self.collectionView reloadData];
-    [self.selectedCountBtn setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)self.collectionView.indexPathsForSelectedItems
+    [self.btnDone setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)self.collectionView.indexPathsForSelectedItems
                             .count] forState:UIControlStateNormal];
-//    self.labelSelectedMedia.text=
     [self showNoAssetsIfNeeded];
 }
 - (void)setAssetsCountWithSelectedIndexPaths:(NSArray *)indexPaths
 {
-    
-    NSInteger count=indexPaths.count;
-    self.btnDone.enabled=count!=0;
-    [self.selectedCountBtn setTitle:[NSString stringWithFormat:@"%li",count] forState:UIControlStateNormal];
-}
-
-- (void)setTitle:(NSString *)title
-{
-    
-    [super setTitle:title];
-    self.labelSelectedMedia.text=title;
-    [self.labelSelectedMedia setNeedsLayout];
-    [self.labelSelectedMedia layoutIfNeeded];
+    [self.btnDone setTitle:[NSString stringWithFormat:@"%lu",(unsigned long)indexPaths.count] forState:UIControlStateNormal];
 }
 
 #pragma mark - Asset Exception View
@@ -494,8 +446,7 @@
     UIImageView *titleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UzysAssetPickerController.bundle/uzysAP_ico_no_image"]];
     titleImage.contentMode = UIViewContentModeCenter;
     titleImage.tag = kTagNoAssetViewImageView;
-    self.btnDone.tag=kTagButtonDone;
-    self.switchBtn.tag=kTagButtonGroupPicker;
+    
     [title sizeToFit];
     [message sizeToFit];
     
@@ -578,7 +529,7 @@
         title.text = NSLocalizedStringFromTable(@"No Videos", @"UzysAssetsPickerController",nil);
         UILabel *msg = (UILabel *)[weakSelf.noAssetView viewWithTag:kTagNoAssetViewMsgLabel];
         msg.text = NSLocalizedStringFromTable(@"You can sync videos onto your iPhone using iTunes.",@"UzysAssetsPickerController", nil);
-
+        
     };
     
     if(self.assets.count ==0)
@@ -606,7 +557,7 @@
                 title.text = NSLocalizedStringFromTable(@"No Videos", @"UzysAssetsPickerController",nil);
                 UILabel *msg = (UILabel *)[self.noAssetView viewWithTag:kTagNoAssetViewMsgLabel];
                 msg.text = NSLocalizedStringFromTable(@"You can sync media onto your iPhone using iTunes.",@"UzysAssetsPickerController", nil);
-
+                
             }
             else if(self.maximumNumberOfSelectionPhoto == 0)
             {
@@ -655,40 +606,22 @@
     BOOL didExceedMaximumNumberOfSelection = [collectionView indexPathsForSelectedItems].count >= self.maximumNumberOfSelection;
     if (didExceedMaximumNumberOfSelection && self.delegate && [self.delegate respondsToSelector:@selector(uzysAssetsPickerControllerDidExceedMaximumNumberOfSelection:)]) {
         [self.delegate uzysAssetsPickerControllerDidExceedMaximumNumberOfSelection:self];
-        
-        if(!self.showMsg){
-            self.showMsg=YES;
-            self.c_msgLabelTopMargin.constant=64.0f;
-            [UIView animateWithDuration:.5f animations:^{
-                self.msgLabel.alpha=1.0f;
-                [self.msgLabel setNeedsLayout];
-                [self.msgLabel layoutIfNeeded];
-            } completion:^(BOOL finished) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    self.c_msgLabelTopMargin.constant=0.0f;
-                    [UIView animateWithDuration:1.0f animations:^{
-                        self.msgLabel.alpha=0.0f;
-                        [self.msgLabel setNeedsLayout];
-                        [self.msgLabel layoutIfNeeded];
-                    } completion:^(BOOL finished) {
-                        self.showMsg=NO;
-                    }];
-                });
-            }];
-        }
-        
-        
     }
     return !didExceedMaximumNumberOfSelection;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    ALAsset *selectedAsset = [self.assets objectAtIndex:indexPath.item];
+    [self.orderedSelectedItem addObject:selectedAsset];
     [self setAssetsCountWithSelectedIndexPaths:collectionView.indexPathsForSelectedItems];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    ALAsset *deselectedAsset = [self.assets objectAtIndex:indexPath.item];
+    
+    [self.orderedSelectedItem removeObject:deselectedAsset];
     [self setAssetsCountWithSelectedIndexPaths:collectionView.indexPathsForSelectedItems];
 }
 
@@ -697,13 +630,13 @@
 
 - (void)finishPickingAssets
 {
-    NSMutableArray *assets = [[NSMutableArray alloc] init];
-    
-    for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems)
-    {
-        [assets addObject:[self.assets objectAtIndex:indexPath.item]];
-    }
-    
+    NSMutableArray *assets = [[NSMutableArray alloc] initWithArray:self.orderedSelectedItem];
+    //
+    //    for (NSIndexPath *index in self.orderedSelectedItem)
+    //    {
+    //        [assets addObject:[self.assets objectAtIndex:index.item]];
+    //    }
+    //
     if([assets count]>0)
     {
         UzysAssetsPickerController *picker = (UzysAssetsPickerController *)self;
@@ -745,9 +678,59 @@
             index = idx;
             *stop = YES;
         }
-
+        
     }];
     return index;
+}
+
+- (NSString *)getUTCFormattedDate:(NSDate *)localDate {
+    static NSDateFormatter *dateFormatter = nil;
+    if (dateFormatter == nil) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy:MM:dd HH:mm:ss"];
+    }
+    NSString *dateString = [dateFormatter stringFromDate:localDate];
+    return dateString;
+}
+
+// Mostly from here: http://stackoverflow.com/questions/3884060/need-help-in-saving-geotag-info-with-photo-on-ios4-1
+- (void)addGPSLocation:(NSMutableDictionary *)metaData {
+    
+    if (self.location != nil) {
+        
+        CLLocationDegrees exifLatitude  = location.coordinate.latitude;
+        CLLocationDegrees exifLongitude = location.coordinate.longitude;
+        
+        NSString *latRef;
+        NSString *lngRef;
+        if (exifLatitude < 0.0) {
+            exifLatitude = exifLatitude * -1.0f;
+            latRef = @"S";
+        } else {
+            latRef = @"N";
+        }
+        
+        if (exifLongitude < 0.0) {
+            exifLongitude = exifLongitude * -1.0f;
+            lngRef = @"W";
+        } else {
+            lngRef = @"E";
+        }
+        
+        NSMutableDictionary *locDict = [[NSMutableDictionary alloc] init];
+        if ([metaData objectForKey:(NSString*)kCGImagePropertyGPSDictionary]) {
+            [locDict addEntriesFromDictionary:[metaData objectForKey:(NSString*)kCGImagePropertyGPSDictionary]];
+        }
+        [locDict setObject:[self getUTCFormattedDate:location.timestamp] forKey:(NSString*)kCGImagePropertyGPSTimeStamp];
+        [locDict setObject:latRef forKey:(NSString*)kCGImagePropertyGPSLatitudeRef];
+        [locDict setObject:[NSNumber numberWithFloat:exifLatitude] forKey:(NSString*)kCGImagePropertyGPSLatitude];
+        [locDict setObject:lngRef forKey:(NSString*)kCGImagePropertyGPSLongitudeRef];
+        [locDict setObject:[NSNumber numberWithFloat:exifLongitude] forKey:(NSString*)kCGImagePropertyGPSLongitude];
+        [locDict setObject:[NSNumber numberWithFloat:location.horizontalAccuracy] forKey:(NSString*)kCGImagePropertyGPSDOP];
+        [locDict setObject:[NSNumber numberWithFloat:location.altitude] forKey:(NSString*)kCGImagePropertyGPSAltitude];
+        
+        [metaData setObject:locDict forKey:(NSString*)kCGImagePropertyGPSDictionary];
+    }
 }
 
 #pragma mark - Notification
@@ -835,6 +818,7 @@
                     [strongSelf setupAssets:^{
                         for (ALAsset *item in selectedItems)
                         {
+                            BOOL isExist = false;
                             for(ALAsset *asset in strongSelf.assets)
                             {
                                 if([[[asset valueForProperty:ALAssetPropertyAssetURL] absoluteString] isEqualToString:[[item valueForProperty:ALAssetPropertyAssetURL] absoluteString]])
@@ -842,21 +826,27 @@
                                     NSUInteger idx = [strongSelf.assets indexOfObject:asset];
                                     NSIndexPath *newPath = [NSIndexPath indexPathForRow:idx inSection:0];
                                     [strongSelf.collectionView selectItemAtIndexPath:newPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+                                    isExist = true;
                                 }
                             }
+                            if(isExist ==false)
+                            {
+                                [strongSelf.orderedSelectedItem removeObject:item];
+                            }
                         }
+                        
                         [strongSelf setAssetsCountWithSelectedIndexPaths:strongSelf.collectionView.indexPathsForSelectedItems];
                         if(strongSelf.assets.count > beforeAssets)
                         {
                             [strongSelf.collectionView setContentOffset:CGPointMake(0, 0) animated:NO];
                         }
-
+                        
                     }];
                     [strongSelf setupGroup:^{
                         [strongSelf.groupPicker reloadData];
                     } withSetupAsset:NO];
                     
-
+                    
                 }
                 else
                 {
@@ -872,15 +862,36 @@
         
     });
 }
-
-
+#pragma mark - Property
+- (void)setTitle:(NSString *)title
+{
+    [super setTitle:title];
+    [self.btnTitle setTitle:title forState:UIControlStateNormal];
+    [self.btnTitle setImageEdgeInsets:UIEdgeInsetsMake(5, 0, 0, 0)];
+    [self.btnTitle setTitleEdgeInsets:UIEdgeInsetsMake(5, 0, 0, 0)];
+    [self.btnTitle layoutIfNeeded];
+}
+- (void)menuArrowRotate
+{
+    [UIView animateWithDuration:0.35 animations:^{
+        if(self.groupPicker.isOpen)
+        {
+            self.imageViewTitleArrow.transform = CGAffineTransformMakeRotation(M_PI);
+        }
+        else
+        {
+            self.imageViewTitleArrow.transform = CGAffineTransformIdentity;
+        }
+    } completion:^(BOOL finished) {
+    }];
+    
+}
 #pragma mark - Control Action
 - (IBAction)btnAction:(id)sender {
-
-    UIButton *btn = (UIButton *)sender;
-    NSInteger tag=btn.tag;
     
-    switch (tag) {
+    UIButton *btn = (UIButton *)sender;
+    
+    switch (btn.tag) {
         case kTagButtonCamera:
         {
             if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -921,7 +932,7 @@
         case kTagButtonGroupPicker:
         {
             [self.groupPicker toggle];
-
+            [self menuArrowRotate];
         }
             break;
         case kTagButtonDone:
@@ -966,7 +977,7 @@
                 
                 [self.assets insertObject:asset atIndex:0];
                 [self reloadData];
-
+                
                 for (ALAsset *item in selectedItems)
                 {
                     for(ALAsset *asset in self.assets)
@@ -979,12 +990,13 @@
                         }
                     }
                 }
-//                [self.collectionView setContentOffset:CGPointMake(0, 0) animated:NO];
+                [self.collectionView setContentOffset:CGPointMake(0, 0) animated:NO];
                 
                 if(self.maximumNumberOfSelection > self.collectionView.indexPathsForSelectedItems.count)
                 {
                     NSIndexPath *newPath = [NSIndexPath indexPathForRow:0 inSection:0];
                     [self.collectionView selectItemAtIndexPath:newPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+                    [self.orderedSelectedItem addObject:asset];
                 }
                 [self setAssetsCountWithSelectedIndexPaths:self.collectionView.indexPathsForSelectedItems];
             }
@@ -998,7 +1010,7 @@
         });
         
     } failureBlock:^(NSError *err){
-
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             __strong typeof(weakSelf) strongSelf = weakSelf;
             [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(assetsLibraryUpdated:) name:ALAssetsLibraryChangedNotification object:nil];
@@ -1021,7 +1033,11 @@
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 UIImage *image = info[UIImagePickerControllerOriginalImage];
                 [[NSNotificationCenter defaultCenter] removeObserver:strongSelf name:ALAssetsLibraryChangedNotification object:nil];
-                [strongSelf.assetsLibrary writeImageToSavedPhotosAlbum:image.CGImage metadata:info[UIImagePickerControllerMediaMetadata] completionBlock:^(NSURL *assetURL, NSError *error) {
+                
+                NSMutableDictionary *metaData = [NSMutableDictionary dictionaryWithDictionary:info[UIImagePickerControllerMediaMetadata]];
+                [self addGPSLocation:metaData];
+                
+                [strongSelf.assetsLibrary writeImageToSavedPhotosAlbum:image.CGImage metadata:metaData completionBlock:^(NSURL *assetURL, NSError *error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self saveAssetsAction:assetURL error:error isPhoto:YES];
                     });
@@ -1035,7 +1051,11 @@
         {
             UIImage *image = info[UIImagePickerControllerOriginalImage];
             [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
-            [self.assetsLibrary writeImageToSavedPhotosAlbum:image.CGImage metadata:info[UIImagePickerControllerMediaMetadata] completionBlock:^(NSURL *assetURL, NSError *error) {
+            
+            NSMutableDictionary *metaData = [NSMutableDictionary dictionaryWithDictionary:info[UIImagePickerControllerMediaMetadata]];
+            [self addGPSLocation:metaData];
+            
+            [self.assetsLibrary writeImageToSavedPhotosAlbum:image.CGImage metadata:metaData completionBlock:^(NSURL *assetURL, NSError *error) {
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [strongSelf saveAssetsAction:assetURL error:error isPhoto:YES];
@@ -1051,7 +1071,7 @@
             self.segmentedControl.selectedSegmentIndex = 1;
             [self changeAssetType:NO endBlock:^{
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-
+                
                 [[NSNotificationCenter defaultCenter] removeObserver:strongSelf name:ALAssetsLibraryChangedNotification object:nil];
                 [strongSelf.assetsLibrary writeVideoAtPathToSavedPhotosAlbum:info[UIImagePickerControllerMediaURL] completionBlock:^(NSURL *assetURL, NSError *error) {
                     DLog(@"assetURL %@",assetURL);
@@ -1076,7 +1096,7 @@
     }
     
     [picker dismissViewControllerAnimated:YES completion:^{}];
-
+    
     
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -1100,7 +1120,13 @@
 {
     return NO;
 }
-
-
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
 
 @end

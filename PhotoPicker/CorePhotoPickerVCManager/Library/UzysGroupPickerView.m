@@ -12,21 +12,6 @@
 
 #define BounceAnimationPixel 5
 #define NavigationHeight 64
-
-#define rgba(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
-
-
-
-@interface UzysGroupPickerView ()
-
-
-
-@property (nonatomic,assign) CGFloat height;
-
-
-@end
-
-
 @implementation UzysGroupPickerView
 
 - (id)initWithGroups:(NSMutableArray *)groups
@@ -37,8 +22,6 @@
         self.groups = groups;
         [self setupLayout];
         [self setupTableView];
-        self.isOpen=YES;
-        self.hidden=NO;
         [self addObserver:self forKeyPath:@"groups" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
     }
     return self;
@@ -54,33 +37,22 @@
     self.frame = CGRectMake(0, - [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     self.layer.cornerRadius = 4;
     self.clipsToBounds = YES;
-    self.backgroundColor=rgba(250, 250, 250,.99f);
+    self.backgroundColor = [UIColor whiteColor];
     
 }
 - (void)setupTableView
 {
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, NavigationHeight, [UIScreen mainScreen].bounds.size.width, self.bounds.size.height -NavigationHeight) style:UITableViewStylePlain];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.tableView.contentInset = UIEdgeInsetsMake(1, 0, 0, 0);
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    
-    
+    self.tableView.scrollsToTop = NO;
     
     self.tableView.rowHeight = kGroupPickerViewCellLength;
-    self.tableView.backgroundColor = [UIColor clearColor];
-    
+    self.tableView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.tableView];
-    UITableView *tableView=self.tableView;
-
-    tableView.translatesAutoresizingMaskIntoConstraints=NO;
-
-    NSDictionary *views=NSDictionaryOfVariableBindings(tableView);
-
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[tableView]-0-|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-72-[tableView]-0-|" options:0 metrics:nil views:views]];
-    
 }
 - (void)reloadData
 {
@@ -88,70 +60,35 @@
 }
 - (void)show
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.hidden=NO;
-        self.isOpen = NO;
-        CGRect frame=self.frame;
-        frame.origin.y=-self.height;
-        self.frame=frame;
-        frame.origin.y=0;
-        [UIView animateWithDuration:.5f animations:^{
-            self.frame=frame;
+    [UIView animateWithDuration:0.25f delay:0.f options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+        self.frame = CGRectMake(0, BounceAnimationPixel , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.15f delay:0.f options:UIViewAnimationOptionCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.frame = CGRectMake(0, 0 , [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         } completion:^(BOOL finished) {
-            self.isOpen = YES;
         }];
-    });
+    }];
+    self.isOpen = YES;
 }
-
 - (void)dismiss:(BOOL)animated
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.hidden=NO;
-        self.isOpen = YES;
-        CGRect frame=self.frame;
-        frame.origin.y=0;
-        self.frame=frame;
-        frame.origin.y=-self.height;
-        [UIView animateWithDuration:.5f animations:^{
-            self.frame=frame;
+    if (!animated)
+    {
+        self.frame = CGRectMake(0, -[UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height );
+    }
+    else
+    {
+        [UIView animateWithDuration:0.3f animations:^{
+            self.frame = CGRectMake(0, - [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         } completion:^(BOOL finished) {
-            self.isOpen = NO;
-            self.hidden=YES;
         }];
-    });
+    }
+    self.isOpen = NO;
+    
 }
-
--(void)didMoveToSuperview{
-    
-    [super didMoveToSuperview];
-    
-    UIView *superView=self.superview;
-    
-    if(superView==nil) return;
-    
-    UzysGroupPickerView *groupView=self;
-    
-    groupView.translatesAutoresizingMaskIntoConstraints=NO;
-    
-    NSDictionary *views=NSDictionaryOfVariableBindings(groupView);
-    
-    NSDictionary *metrics=@{@"height":@(self.height)};
-    
-    NSArray *constraintsH=[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[groupView]-0-|" options:0 metrics:nil views:views];
-    NSArray *constraintsV=[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[groupView]-0-|" options:0 metrics:metrics views:views];
-    
-    [superView addConstraints:constraintsH];
-    [superView addConstraints:constraintsV];
-}
-
-
-
-
-
-
 - (void)toggle
 {
-    if(!self.isOpen)
+    if(self.frame.origin.y <0)
     {
         [self show];
     }
@@ -199,19 +136,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismiss:YES];
-    });
     if(self.blockTouchCell)
         self.blockTouchCell(indexPath.row);
 }
-
-
--(CGFloat)height{
-    
-    return [[UIApplication sharedApplication].windows.firstObject bounds].size.height;
-}
-
-
 
 @end

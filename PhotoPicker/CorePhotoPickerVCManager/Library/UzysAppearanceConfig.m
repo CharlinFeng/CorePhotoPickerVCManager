@@ -20,6 +20,18 @@
     return shared;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+
+    if (self) {
+        self.assetsCountInALine = 4;
+        self.cellSpacing = 1.0f;
+    }
+
+    return self;
+}
+
 - (NSString *)assetSelectedImageName
 {
     if (!_assetSelectedImageName) {
